@@ -1,0 +1,5 @@
+# GradeOps Docker Compose orchestration
+# Orchestrates api, worker-ocr, worker-grading, redis, frontend
+version: '3.8'
+services:
+  # To be implemented

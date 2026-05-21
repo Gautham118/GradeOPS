@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+python-jose[cryptography]
+supabase
+celery
+redis
+pymupdf
+pillow
+transformers
+groq
+langgraph
+sentence-transformers
+pydantic-settings
+python-multipart
