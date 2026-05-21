@@ -9,9 +9,24 @@ create policy "Instructors insert exams" on exams for insert
 create policy "All read exams" on exams for select using (true);
 
 -- Submissions: instructors manage, TAs read
+-- alter table submissions enable row level security;              -- Claude added this, but it's not needed
+-- create policy "Instructors manage submissions" on submissions for all
+--   using ((select role from profiles where id = auth.uid()) = 'instructor');
+
 alter table submissions enable row level security;
-create policy "Instructors manage submissions" on submissions for all
-  using ((select role from profiles where id = auth.uid()) = 'instructor');
+
+create policy "Instructors read submissions"
+on submissions for select
+using ((select role from profiles where id = auth.uid()) = 'instructor');
+
+create policy "Instructors insert submissions"
+on submissions for insert
+with check ((select role from profiles where id = auth.uid()) = 'instructor');
+
+create policy "Instructors update submissions"
+on submissions for update
+using ((select role from profiles where id = auth.uid()) = 'instructor');
+
 create policy "TAs read submissions" on submissions for select
   using ((select role from profiles where id = auth.uid()) = 'ta');
 
