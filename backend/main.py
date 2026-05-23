@@ -1,17 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from routers import exams, submissions, grades
 
-app = FastAPI(title="GradeOps API")
+app = FastAPI(title="GradeOps API", version="1.0.0")
 
-# App factory, CORS middleware, router registration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/")
-async def root():
-    return {"message": "GradeOps API is running"}
+app.include_router(exams.router,       prefix="/exams",       tags=["exams"])
+app.include_router(submissions.router, prefix="/submissions",  tags=["submissions"])
+app.include_router(grades.router,      prefix="/grades",       tags=["grades"])
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
