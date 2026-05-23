@@ -13,5 +13,9 @@ class Settings(BaseSettings):
         env_file = ".env"
 
 settings = Settings()
+
+# Admin client (bypasses RLS — only used in workers)
 supabase_admin: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_ROLE_KEY)
+
+# Anon client (respects RLS — used in API routes)
 supabase_anon: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_ANON_KEY)
