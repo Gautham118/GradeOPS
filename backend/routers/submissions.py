@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
-from typing import Annotated
+from typing import Annotated, List
 from schemas.submission import SubmissionOut
 from core.deps import require_role
 from core.config import supabase_admin
@@ -11,11 +11,12 @@ router = APIRouter()
 @router.post("/bulk", response_model=dict)
 async def upload_bulk(
     exam_id: Annotated[str, Form()],
-    student_names: Annotated[str, Form()],   # comma-separated: "Alice,Bob,Charlie"
-    files: list[UploadFile] = File(...),
+    student_names: Annotated[str, Form()],
+    file: UploadFile = File(...),          # single file — Swagger renders this correctly
     user: dict = Depends(require_role("instructor"))
 ):
     names = [n.strip() for n in student_names.split(",")]
+    files = [file]                         # wrap in list so rest of code unchanged
 
     if len(files) != len(names):
         raise HTTPException(
@@ -61,8 +62,8 @@ async def upload_bulk(
         created.append(submission)
 
         # Enqueue OCR task — uncomment after Day 4
-        # from worker.tasks import run_ocr_task
-        # run_ocr_task.delay(submission["id"])
+        from worker.tasks import run_ocr_task
+        run_ocr_task.delay(submission["id"])
 
     return {
         "message": f"{len(created)} submissions uploaded successfully",

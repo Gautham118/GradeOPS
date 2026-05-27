@@ -1,20 +1,38 @@
 from PIL import Image
 
-def detect_question_regions(img: Image.Image, rubric_json: dict, page_num: int) -> list[dict]:
+def detect_question_regions(
+    page_image: Image.Image,
+    rubric_json: dict,
+    page_index: int
+) -> list[dict]:
+    """
+    Heuristic region detector:
+    - Assumes one question per page (simple layout)
+    - For multi-question pages, splits page into N equal horizontal strips
+    
+    Returns list of {"question_id": str, "bbox": (x1,y1,x2,y2), "page_index": int}
+    """
     questions = rubric_json.get("questions", [])
-    width, height = img.size
-    questions_per_page = max(1, len(questions) // max(1, page_num + 1))
-    start_idx = page_num * questions_per_page
+    W, H = page_image.size
+
+    # Questions mapped to pages by index
+    # Page 0 → questions 0,1  |  Page 1 → questions 2,3  etc.
+    # Adjust this mapping based on your actual exam layout
+    questions_on_page = [q for i, q in enumerate(questions) if i == page_index]
+
+    if not questions_on_page:
+        return []
 
     regions = []
-    for i in range(questions_per_page):
-        q_idx = start_idx + i
-        if q_idx >= len(questions):
-            break
-        top = int((i / questions_per_page) * height)
-        bottom = int(((i + 1) / questions_per_page) * height)
+    strip_height = H // len(questions_on_page)
+
+    for i, question in enumerate(questions_on_page):
+        y1 = i * strip_height
+        y2 = (i + 1) * strip_height if i < len(questions_on_page) - 1 else H
         regions.append({
-            "question_id": questions[q_idx]["id"],
-            "bbox": (0, top, width, bottom)
+            "question_id": question["id"],
+            "bbox": (0, y1, W, y2),
+            "page_index": page_index
         })
+
     return regions
