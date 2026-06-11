@@ -8,7 +8,7 @@ export function useRealtimeGrades(examId) {
   useEffect(() => {
     if (!examId) return
 
-    // Initial fetch of pending grades
+    // Initial fetch
     supabase
       .from("grades")
       .select("*, submissions(student_name)")
@@ -20,7 +20,7 @@ export function useRealtimeGrades(examId) {
         setLoading(false)
       })
 
-    // Subscribe to new grades arriving from grading worker
+    // Live subscription — new grades arrive from grading worker
     const channel = supabase
       .channel(`grades-${examId}`)
       .on("postgres_changes", {
@@ -38,5 +38,5 @@ export function useRealtimeGrades(examId) {
     return () => supabase.removeChannel(channel)
   }, [examId])
 
-  return { grades, loading, setGrades }
+  return { grades, setGrades, loading }
 }
