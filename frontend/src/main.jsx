@@ -13,15 +13,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={
-          <ProtectedRoute><Dashboard /></ProtectedRoute>
-        } />
-        <Route path="/upload" element={
-          <ProtectedRoute requiredRole="instructor"><ExamUpload /></ProtectedRoute>
-        } />
-        <Route path="/review" element={
-          <ProtectedRoute><ReviewQueue /></ProtectedRoute>
-        } />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/upload" element={<ProtectedRoute requiredRole="instructor"><ExamUpload /></ProtectedRoute>} />
+        <Route path="/review" element={<ProtectedRoute><ReviewQueue /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>

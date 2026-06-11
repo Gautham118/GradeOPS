@@ -18,6 +18,7 @@ export default function ExamUpload() {
   const [step, setStep] = useState(1)  // 1=exam details, 2=upload PDFs
   const [createdExamId, setCreatedExamId] = useState(null)
   const [message, setMessage] = useState("")
+  const [uploaded, setUploaded] = useState(false)
 
   const token = session?.access_token
 
@@ -66,8 +67,8 @@ export default function ExamUpload() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.detail)
-      setMessage(`✅ ${data.message}. Processing started — check Review Queue!`)
-      setTimeout(() => navigate("/review"), 2000)
+      setMessage(`✅ ${data.message}. Processing started!`)
+      setUploaded(true)
     } catch (err) {
       setMessage(`Error: ${err.message}`)
     }
@@ -170,12 +171,32 @@ export default function ExamUpload() {
               )}
             </div>
 
-            <button
-              onClick={uploadSubmissions}
-              disabled={loading}
-              className="w-full bg-purple-600 hover:bg-purple-500 disabled:opacity-50 
-                         text-white py-3 rounded-xl font-medium transition"
-            >{loading ? "Uploading..." : "Upload & Start Grading 🚀"}</button>
+            {!uploaded ? (
+              <button
+                onClick={uploadSubmissions}
+                disabled={loading}
+                className="w-full bg-purple-600 hover:bg-purple-500 disabled:opacity-50 
+                           text-white py-3 rounded-xl font-medium transition"
+              >{loading ? "Uploading..." : "Upload & Start Grading 🚀"}</button>
+            ) : (
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setUploaded(false)
+                    setFiles([])
+                    setStudentNames("")
+                    setMessage("")
+                  }}
+                  className="flex-1 border border-blue-500 text-blue-400 hover:bg-blue-900/30 
+                             py-3 rounded-xl font-medium transition text-sm"
+                >+ Upload More PDFs to This Exam</button>
+                <button
+                  onClick={() => navigate("/review")}
+                  className="flex-1 bg-green-700 hover:bg-green-600 
+                             text-white py-3 rounded-xl font-medium transition text-sm"
+                >Go to Review Queue →</button>
+              </div>
+            )}
           </div>
         )}
 
