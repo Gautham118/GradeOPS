@@ -207,7 +207,8 @@ In Supabase Dashboard → Authentication → Users, create two accounts:
 
 ## Running the Project
 
-You need 4 terminals running simultaneously. On Windows, double-click `start_dev.bat` to open all at once.
+You need 4 terminals running simultaneously. On Windows, open `start_project.bat` file and change the `set CONDA_ENV=base` line to match with your conda environment name. A clear comment inside the file tell you how to find it. 
+Save the file and then double-click it to open all at once.
 
 ```bash
 # Terminal 1 — FastAPI backend
