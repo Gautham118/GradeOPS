@@ -19,7 +19,7 @@ def check_plagiarism(
     grade_id: str,
     question_id: str,
     embedding: list[float],
-    threshold: float = 0.92
+    threshold: float = 0.85
 ) -> bool:
     """
     Query pgvector for similar answers to the same question.
@@ -35,5 +35,10 @@ def check_plagiarism(
             "similarity_threshold": threshold
         }
     ).execute()
+
+    print(f"[PLAG] grade={grade_id}")
+    print(f"[PLAG] question={question_id}")
+    print(f"[PLAG] matches={len(result.data)}")
+    print(f"[PLAG] data={result.data}")
 
     return len(result.data) > 0
