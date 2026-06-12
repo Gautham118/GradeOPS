@@ -12,11 +12,11 @@ router = APIRouter()
 async def upload_bulk(
     exam_id: Annotated[str, Form()],
     student_names: Annotated[str, Form()],
-    file: UploadFile = File(...),          # single file — Swagger renders this correctly
+    files: List[UploadFile] = File(...),          # multiple files — Swagger renders this correctly
     user: dict = Depends(require_role("instructor"))
 ):
     names = [n.strip() for n in student_names.split(",")]
-    files = [file]                         # wrap in list so rest of code unchanged
+    # files = [file]                         # wrap in list so rest of code unchanged
 
     if len(files) != len(names):
         raise HTTPException(

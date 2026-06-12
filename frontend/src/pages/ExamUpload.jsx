@@ -19,6 +19,7 @@ export default function ExamUpload() {
   const [createdExamId, setCreatedExamId] = useState(null)
   const [message, setMessage] = useState("")
   const [uploaded, setUploaded] = useState(false)
+  const [fileInputKey, setFileInputKey] = useState(0)
 
   const token = session?.access_token
 
@@ -58,7 +59,7 @@ export default function ExamUpload() {
       const formData = new FormData()
       formData.append("exam_id", createdExamId)
       formData.append("student_names", studentNames)
-      Array.from(files).forEach(f => formData.append("file", f))
+      Array.from(files).forEach(f => formData.append("files", f))
 
       const res = await fetch(`${API}/submissions/bulk`, {
         method: "POST",
@@ -158,6 +159,7 @@ export default function ExamUpload() {
             <div>
               <label className="text-sm text-gray-400 block mb-1">PDF files</label>
               <input
+                key={fileInputKey}
                 type="file"
                 accept=".pdf"
                 multiple
@@ -186,6 +188,7 @@ export default function ExamUpload() {
                     setFiles([])
                     setStudentNames("")
                     setMessage("")
+                    setFileInputKey(k => k + 1)
                   }}
                   className="flex-1 border border-blue-500 text-blue-400 hover:bg-blue-900/30 
                              py-3 rounded-xl font-medium transition text-sm"
