@@ -4,7 +4,6 @@
 
 GradeOps automates the grading of handwritten exam PDFs using Vision-Language Models and LLM-based rubric evaluation, with a real-time TA review dashboard for human oversight and correction.
 
-Built as a portfolio project targeting **Data Science and ML Engineering** roles.
 
 ---
 
