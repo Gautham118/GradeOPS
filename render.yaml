@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: gradeops-api
+    rootDir: backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - fromGroup: gradeops-secrets
+
+  - type: worker
+    name: gradeops-worker-ocr
+    rootDir: backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A worker.celery_app worker -Q ocr -c 1 --loglevel=info
+    envVars:
+      - fromGroup: gradeops-secrets
+
+  - type: worker
+    name: gradeops-worker-grading
+    rootDir: backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python preload_model.py
+    startCommand: celery -A worker.celery_app worker -Q grading -c 1 --loglevel=info
+    envVars:
+      - fromGroup: gradeops-secrets
