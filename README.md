@@ -62,8 +62,7 @@ gradeops/
 ├── backend/
 │   ├── main.py                  # FastAPI app, CORS, router registration
 │   ├── core/
-│   │   ├── config.py            # Pydantic settings
-│   │   ├── supabase_client.py   # Admin + anon Supabase clients
+│   │   ├── config.py            # Admin + anon Supabase clients and Pydantic settings
 │   │   ├── auth.py              # JWT verification via HTTPBearer
 │   │   └── deps.py              # require_role() dependency
 │   ├── routers/
@@ -121,8 +120,8 @@ gradeops/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/gradeops.git
-cd gradeops
+git clone https://github.com/Gautham118/GradeOPS.git
+cd GradeOPS
 ```
 
 ### 2. Supabase setup
@@ -273,7 +272,6 @@ Open [http://localhost:5173](http://localhost:5173)
 - **Region detection** — Current heuristic divides pages into equal horizontal bands; a layout detection model (LayoutLM) would handle complex exam formats
 - **Single question per page** — multi-question pages are partially supported but not fully tested
 - **No email notifications** — TAs must check the dashboard manually; Supabase Edge Functions could trigger emails
-- **Deployment** — Railway deployment config is planned for Day 9
 
 ---
 
