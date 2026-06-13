@@ -24,13 +24,15 @@ def parse_rubric(state: dict) -> dict:
 
     # Find this question's rubric
     rubric_json = grade["exams"]["rubric_json"]
+    question_id = grade["question_id"]          # ← READ FROM DB
     question_rubric = next(
-        (q for q in rubric_json["questions"] if q["id"] == grade["question_id"]),
+        (q for q in rubric_json["questions"] if q["id"] == question_id),
         None
     )
 
     return {
         **state,
+        "question_id": question_id,             # ← SET IN STATE
         "transcription": grade["transcription"] or "",
         "question_rubric": question_rubric,
         "max_marks": question_rubric["max_marks"] if question_rubric else 10,
